@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="BGMI Sensitivity Calculator by Ajinkya2OP — 12-layer engine, PMGC Elite mode, 8yr tuned. Free + Pro ₹99 + PMGC ₹199."/>
+  <meta name="theme-color" content="#080b12"/>
+  <meta property="og:title"       content="Ajinkya2OP | BGMI Sensitivity Calculator v6 PMGC"/>
+  <meta property="og:description" content="Tournament-level sensitivity engine. Free · Pro ₹99 · PMGC Elite ₹199."/>
+  <meta property="og:type"        content="website"/>
+  <title>Ajinkya2OP | BGMI Sensitivity Calculator v6 PMGC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="src/css/main.css"/>
+  <!-- Official Cashfree JS SDK v3 — preloaded at page start for instant payment readiness -->
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+</head>
+<body>
+
+<div class="bg-grid"  aria-hidden="true"></div>
+<div class="bg-glow"  aria-hidden="true"></div>
+<div class="bg-glow2" aria-hidden="true"></div>
+
+<!-- ══════════════════════════════════════
+     HEADER
+     ══════════════════════════════════════ -->
+<header>
+  <div class="hi">
+    <div class="logo">
+      <span class="lico" aria-hidden="true">⚡</span>
+      <div>
+        <div class="ltitle">AJINKYA<span class="acc">2OP</span></div>
+        <div class="lsub">BGMI Sensitivity Calculator</div>
+      </div>
+    </div>
+    <div class="hright">
+      <div class="chip chip-neon">8-YR TUNED</div>
+      <div class="chip chip-purple" id="versionChip">v4 FREE</div>
+      <button class="pro-btn" id="proHeaderBtn" aria-label="Unlock Pro or PMGC tier">
+        👑 Unlock Pro
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════
+     MAIN
+     ══════════════════════════════════════ -->
+<main>
+
+  <!-- ── LEFT: Configuration Form ── -->
+  <section class="card" aria-label="Sensitivity configuration">
+    <div class="cht">Configure Your Setup</div>
+    <div class="chs">
+      12-layer engine · Golden Base: Realme 5 60FPS · iQOO Neo 7 Pro · 90FPS · iPhone 17 120FPS ·8yr tuned
+      <span class="update-tag">✅ 6x &amp; 8x Updated</span>
+    </div>
+
+    <!-- ── PMGC Mode Toggle ── -->
+    <div class="mode-toggle-wrap">
+      <div class="mode-label">
+        <div class="mode-toggle-title" id="modeLockedLabel">🔒 PMGC Elite Mode</div>
+        <div class="mode-toggle-sub">PMGC Mode = Tournament Level Sensitivity 🔥</div>
+        <div class="mode-locked-hint" id="modeToggleLock">Unlock for ₹199 to activate</div>
+      </div>
+      <div class="mode-pill-toggle" role="group" aria-label="Sensitivity mode">
+        <span class="mode-pill-opt active-normal" id="modeNormalLabel">Normal</span>
+        <label style="display:contents">
+          <input type="checkbox" id="modeToggle" role="switch" aria-checked="false"/>
+          <span class="mode-pill-opt" id="modePMGCLabel">PMGC 🔥</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- PMGC mode active banner -->
+    <div class="pmgc-mode-banner" id="pmgcModeBanner">
+      ⚡ PMGC Elite Engine Active — Tournament Level Sensitivity 🔥
+    </div>
+
+    <form id="f" novalidate>
+
+      <!-- Device Info -->
+      <div class="pill pill-g">📱 Device Info</div>
+      <div class="fg">
+        <label class="lbl" for="dev">Device Name</label>
+        <input type="text" id="dev" name="device"
+          placeholder="e.g. iQOO Neo 7 Pro / iPhone 15 Pro"
+          maxlength="60" autocomplete="off" spellcheck="false"
+          aria-describedby="derr"/>
+        <div class="errmsg" id="derr" role="alert">Please enter your device name.</div>
+      </div>
+      <div class="fg">
+        <label class="lbl lbl-c" for="devcat">📊 Device Category</label>
+        <div class="sw">
+          <select id="devcat" name="devcat" class="sc">
+            <option value="android_mid">Android – Mid Range</option>
+            <option value="android_flag" selected>Android – Flagship</option>
+            <option value="iphone">iPhone</option>
+            <option value="ipad">iPad</option>
+            <option value="pmgc_option" disabled id="pmgcOption">PMGC Elite (Locked ₹199)</option>
+          </select>
+          <span class="sa" aria-hidden="true">▾</span>
+        </div>
+      </div>
+
+      <hr class="dv"/>
+
+      <!-- Performance -->
+      <div class="pill pill-c">🎮 Performance</div>
+      <div class="fg">
+        <label class="lbl" for="fps">Frame Rate</label>
+        <div class="sw">
+          <select id="fps" name="fps">
+            <option value="60">60 FPS</option>
+            <option value="90" selected>90 FPS — Golden Base ⭐</option>
+            <option value="120">120 FPS</option>
+          </select>
+          <span class="sa" aria-hidden="true">▾</span>
+        </div>
+      </div>
+      <div class="fg-row">
+        <label class="lbl" for="gyro">🔄 Gyroscope</label>
+        <label class="tog">
+          <input type="checkbox" id="gyro" checked/>
+          <span class="tk"><span class="tt"></span></span>
+          <span class="tl on" id="gl" aria-live="polite">ON</span>
+        </label>
+      </div>
+      <div class="fg">
+        <label class="lbl lbl-p" for="haccel">⚡ Horizontal Acceleration</label>
+        <div class="sw">
+          <select id="haccel" name="haccel" class="sp">
+            <option value="off" selected>OFF (Recommended)</option>
+            <option value="on">ON</option>
+          </select>
+          <span class="sa" aria-hidden="true">▾</span>
+        </div>
+      </div>
+
+      <hr class="dv"/>
+
+      <!-- Playstyle & Fingers -->
+      <div class="pill pill-g">🎯 Playstyle &amp; Fingers</div>
+      <div class="fg">
+        <div class="lbl" id="ps-label">Playstyle</div>
+        <div class="ps-grid" role="radiogroup" aria-labelledby="ps-label">
+          <label class="ps-opt" tabindex="0">
+            <input type="radio" name="ps" value="close"/>
+            <span class="psi">⚔️</span><span class="psn">Close</span><span class="psd">Rush CQC</span>
+          </label>
+          <label class="ps-opt" tabindex="0">
+            <input type="radio" name="ps" value="spray"/>
+            <span class="psi">🔥</span><span class="psn">Spray</span><span class="psd">Full auto</span>
+          </label>
+          <label class="ps-opt sel" tabindex="0">
+            <input type="radio" name="ps" value="balanced" checked/>
+            <span class="psi">⚖️</span><span class="psn">Balanced</span><span class="psd">All-round</span>
+          </label>
+          <label class="ps-opt" tabindex="0">
+            <input type="radio" name="ps" value="sniper"/>
+            <span class="psi">🎯</span><span class="psn">Sniper</span><span class="psd">Long range</span>
+          </label>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="lbl lbl-p" for="finger">🖐️ Finger Setup</label>
+        <div class="sw">
+          <select id="finger" name="finger" class="sp">
+            <option value="two">2 Finger</option>
+            <option value="three" selected>3 Finger</option>
+            <option value="four">4 Finger</option>
+            <option value="five">5 Finger</option>
+          </select>
+          <span class="sa" aria-hidden="true">▾</span>
+        </div>
+      </div>
+
+      <hr class="dv"/>
+
+      <!-- Headshot Magnet -->
+      <div class="pill pill-o">🎯 Headshot Magnet</div>
+      <div class="hl-row">
+        <div>
+          <div class="lbl lbl-o" style="margin-bottom:2px">🎯 Headshot Magnet Mode</div>
+          <div style="font-size:.7rem;color:var(--t3)">Boosts Red Dot + 2x gyro · tightens 4x recoil</div>
+        </div>
+        <label class="tog hs">
+          <input type="checkbox" id="hsboost"/>
+          <span class="tk"><span class="tt"></span></span>
+          <span class="tl" id="hsl" aria-live="polite">OFF</span>
+        </label>
+      </div>
+
+      <!-- Competitive Engine (Pro-locked) -->
+      <div class="pill pill-gold">👑 Competitive Engine</div>
+      <div class="hl-row-gold locked-group" id="compGroup">
+        <div>
+          <div class="lbl lbl-gold" style="margin-bottom:2px">
+            Engine Preset <span style="color:var(--red);font-size:.6rem">(PRO)</span>
+          </div>
+          <div style="font-size:.7rem;color:var(--t3)">Unlock Pro to access competitive presets</div>
+        </div>
+        <div class="sw" style="min-width:160px">
+          <select id="compMode" name="compMode" class="sg" disabled>
+            <option value="balanced">Balanced (Free)</option>
+            <option value="competitive">Competitive</option>
+            <option value="close_beast">Close Beast</option>
+            <option value="zero_recoil">Zero Recoil</option>
+            <option value="low_precision">Low Sensitivity</option>
+            <option value="tournament">Tournament Stability</option>
+          </select>
+          <span class="sa" aria-hidden="true">▾</span>
+        </div>
+      </div>
+
+      <button type="submit" class="genbtn">
+        <span>Generate Sensitivity</span>
+        <span class="gar" aria-hidden="true">→</span>
+      </button>
+    </form>
+  </section>
+
+  <!-- ── RIGHT: Results Column ── -->
+  <div class="rcol" id="resultCol">
+
+    <!-- Placeholder -->
+    <div class="rph" id="ph" aria-label="Generate sensitivity to see results">
+      <div class="phi" aria-hidden="true">🎯</div>
+      <div class="pht">Configure your setup<br/>and hit Generate<br/>to see output</div>
+    </div>
+
+    <!-- Normal Result Card -->
+    <section class="card rcard" id="rc" hidden aria-label="Sensitivity output">
+      <div class="rh">
+        <div class="rt">Sensitivity Output</div>
+        <div class="badges">
+          <div class="rb"      id="rbadge">BALANCED</div>
+          <div class="rb-hs"   id="rhs"   hidden>🎯 MAGNET</div>
+          <div class="rb-pro"  id="rpro"  hidden>👑 PRO</div>
+          <div class="rb-demo" id="rdemo" hidden>🎮 DEMO</div>
+        </div>
+      </div>
+      <div class="ob">
+        <pre class="ot" id="ot" aria-label="Sensitivity values"></pre>
+      </div>
+      <div class="acts">
+        <button class="cpybtn" id="cpybtn" type="button">📋 Copy All</button>
+        <button class="regbtn" id="regbtn" type="button">🔁 Regenerate</button>
+      </div>
+
+      <!-- ── Share Actions (revealed after first generate) ── -->
+      <div class="share-acts" id="shareActs" hidden>
+        <button class="sharebtn" id="screenshotBtn" type="button" aria-label="Take screenshot">
+          📸 Screenshot
+        </button>
+        <button class="sharebtn" id="downloadBtn" type="button" aria-label="Download as PNG">
+          ⬇️ Download
+        </button>
+        <button class="sharebtn" id="shareBtn" type="button" aria-label="Share sensitivity">
+          🔗 Share
+        </button>
+      </div>
+    </section>
+
+
+    <!-- ── Voice Guide Section (hidden until generate) ── -->
+    <div class="voice-section" id="voiceSection" hidden role="complementary" aria-label="AI voice guide">
+      <div class="voice-content">
+        <div class="voice-info">
+          <span class="voice-emoji" aria-hidden="true">🎙️</span>
+          <div class="voice-text-wrap">
+            <div class="voice-title">AI Voice Guide</div>
+            <div class="voice-sub">Hear tips for applying this sensitivity</div>
+          </div>
+        </div>
+        <button class="voice-btn" id="voiceBtn" type="button" aria-label="Play voice guide">
+          🔊 Play Guide
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Upgrade Nudge (hidden when fully unlocked) ── -->
+    <div class="upgrade-nudge" id="upgradeNudge" hidden role="complementary" aria-label="Upgrade options">
+      <div class="nudge-heading">Want even better accuracy?</div>
+      <div class="nudge-items">
+        <div class="nudge-item" id="nudgeProRow">
+          <span class="nudge-item-icon" aria-hidden="true">👑</span>
+          <div class="nudge-item-body">
+            <div class="nudge-item-title">Pro — ₹99 one-time</div>
+            <div class="nudge-item-sub">Advanced device tuning · 6 competitive presets · ±5% fine-tune sliders</div>
+          </div>
+          <button class="nudge-btn nudge-btn-pro" id="nudgeProBtn" type="button">Unlock</button>
+        </div>
+        <div class="nudge-item" id="nudgePMGCRow">
+          <span class="nudge-item-icon" aria-hidden="true">🔥</span>
+          <div class="nudge-item-body">
+            <div class="nudge-item-title">PMGC Elite — ₹199 one-time</div>
+            <div class="nudge-item-sub">Tournament-level sensitivity · Separate verified PMGC base engine</div>
+          </div>
+          <button class="nudge-btn nudge-btn-pmgc" id="nudgePMGCBtn" type="button">Unlock</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Tips / Disclaimer Card (hidden until generate) ── -->
+    <div class="tips-card" id="tipsCard" hidden role="complementary" aria-label="Tips for best results">
+      <div class="tips-header">
+        <span class="tips-icon" aria-hidden="true">✅</span>
+        <span class="tips-title">Important Tips for Best Results</span>
+      </div>
+      <ul class="tips-list" role="list">
+        <li>This sensitivity is tested in training ground for best performance</li>
+        <li>Use this sensitivity for at least 3 days before changing</li>
+        <li>You can adjust ADS and Gyro sensitivity ±5 according to your device comfort</li>
+        <li>Consistency is key for improving gameplay</li>
+      </ul>
+    </div>
+
+    <!-- ── PMGC Blur Preview Section ── -->
+    <section class="pmgc-preview-card" id="pmgcPreviewSection" hidden aria-label="PMGC Elite sensitivity preview">
+      <div class="pmgc-preview-header">
+        <div class="pmgc-preview-title">⚡ PMGC Elite Sensitivity</div>
+        <div class="pmgc-tournament-badge">Tournament Level</div>
+      </div>
+      <div class="pmgc-social-proof">
+        Used by competitive BGMI players — PMGC 4.3 verified
+      </div>
+
+      <div class="pmgc-preview-wrap">
+        <!-- The actual PMGC values (blurred when locked) -->
+        <pre class="pmgc-preview-content pmgc-blurred" id="pmgcPreviewContent" aria-hidden="true"></pre>
+
+        <!-- Lock overlay (shown when not unlocked) -->
+        <div class="pmgc-lock-overlay" id="pmgcLockOverlay">
+          <div class="pmgc-lock-icon">🔒</div>
+          <div class="pmgc-lock-text">
+            <strong>PMGC Elite Locked</strong>
+            Tournament-level values hidden
+          </div>
+          <button class="pmgc-unlock-cta" id="pmgcUnlockCTA" type="button">
+            🔥 Unlock PMGC Elite — ₹199
+          </button>
+        </div>
+      </div>
+
+      <!-- Copy row (shown only when unlocked) -->
+      <div class="pmgc-copy-row" id="pmgcCopyRow" hidden>
+        <button class="pmgc-copy-btn" id="pmgcCopyBtn" type="button">📋 Copy PMGC</button>
+      </div>
+    </section>
+
+    <!-- Pro Upgrade Bar -->
+    <div class="pub" id="proUnlockBar" role="button" tabindex="0" aria-label="Unlock Pro tier">
+      <div class="pub-l">
+        <span class="pub-icon" aria-hidden="true">👑</span>
+        <div>
+          <div class="pub-title">Pro Competitive Engine + Advanced Tuning</div>
+          <div class="pub-sub">6 presets · Device optimisation · Headshot PRO+ · Fine-tune sliders</div>
+        </div>
+      </div>
+      <div class="pub-r">Unlock ₹99 →</div>
+    </div>
+
+  </div>
+
+  <!-- ── Info Row ── -->
+  <div class="info-row" aria-label="Feature highlights">
+    <div class="ic">
+      <span class="ici" aria-hidden="true">🏆</span>
+      <h3>Golden Base</h3>
+      <p>8yr iQOO Neo 7 Pro tuning — every number real-match verified.</p>
+    </div>
+    <div class="ic">
+      <span class="ici" aria-hidden="true">✅</span>
+      <h3>6x &amp; 8x Fixed</h3>
+      <p>Cam · ADS · Gyro · ADS Gyro updated. Training Ground verified values.</p>
+    </div>
+    <div class="ic">
+      <span class="ici" aria-hidden="true">📱</span>
+      <h3>Device Optimised</h3>
+      <p>High-end, mid-range &amp; FPS-aware scaling. Pro feature.</p>
+    </div>
+    <div class="ic">
+      <span class="ici" aria-hidden="true">🎯</span>
+      <h3>Headshot Magnet</h3>
+      <p>Micro-boosts Red Dot + 2x gyro. Tightens 4x recoil for snap HS plays.</p>
+    </div>
+    <div class="ic">
+      <span class="ici" aria-hidden="true">🔥</span>
+      <h3>PMGC Elite</h3>
+      <p>Separate tournament base — stable recoil, HS control, smooth spray. ₹199.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════ -->
+<footer>
+  <p>Made with 🔥 by <strong>Ajinkya2OP</strong> · BGMI Sensitivity Calculator v6.0</p>
+  <p class="fsub">Base: iQOO Neo 7 Pro · 90 FPS · 8yr Tuned · 6x &amp; 8x Training Ground Verified ✅</p>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ══════════════════════════════════════
+     PRO / PMGC MODAL
+     ══════════════════════════════════════ -->
+<div class="pro-overlay" id="proOverlay" hidden role="dialog" aria-modal="true"
+     aria-labelledby="pmTitle" tabindex="-1">
+  <div class="pro-modal">
+
+    <span class="pm-crown" aria-hidden="true">👑</span>
+    <div class="pm-title" id="pmTitle">Unlock Your Level</div>
+    <div class="pm-sub">One-time payment. No subscriptions. No ads.</div>
+
+    <!-- 3-tier comparison -->
+    <div class="tier-row">
+      <div class="tier-card free">
+        <div class="tier-label">Free</div>
+        <div class="tier-item">✅ Full sensitivity</div>
+        <div class="tier-item">✅ All base scopes</div>
+        <div class="tier-item">✅ HS Magnet</div>
+        <div class="tier-item">❌ Presets</div>
+        <div class="tier-item">❌ Adv tuning</div>
+        <div class="tier-item">❌ PMGC base</div>
+      </div>
+      <div class="tier-card pro">
+        <div class="tier-label">Pro 👑</div>
+        <div class="tier-item">✅ 6 presets</div>
+        <div class="tier-item">✅ Device optim.</div>
+        <div class="tier-item">✅ FPS tuning</div>
+        <div class="tier-item">✅ HS PRO+</div>
+        <div class="tier-item">✅ ±5% sliders</div>
+        <div class="tier-item">❌ PMGC base</div>
+      </div>
+      <div class="tier-card pmgc">
+        <div class="tier-label">PMGC 🔥</div>
+        <div class="tier-item">✅ PMGC elite base</div>
+        <div class="tier-item">✅ Tournament tuning</div>
+        <div class="tier-item">✅ Best recoil ctrl</div>
+        <div class="tier-item">✅ HS precision</div>
+        <div class="tier-item">✅ Smooth spray</div>
+        <div class="tier-item">✅ 4.3 verified</div>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="pm-prices">
+      <div class="pm-price-box pro">
+        <div class="price">₹99</div>
+        <div class="price-label">Pro — One-time</div>
+        <div class="price-note">No subscription</div>
+      </div>
+      <div class="pm-price-box pmgc">
+        <div class="price">₹199</div>
+        <div class="price-label">PMGC Elite — One-time</div>
+        <div class="price-note">Tournament engine</div>
+      </div>
+    </div>
+
+    <!-- ── Email Input ── -->
+    <div class="pm-email-wrap">
+      <label class="pm-email-label" for="payEmail">
+        📧 Your email <span class="pm-email-req">(required for payment + re-access)</span>
+      </label>
+      <input type="email" id="payEmail" class="pm-email-input"
+        placeholder="you@example.com" autocomplete="email" spellcheck="false"/>
+      <div class="pm-email-hint">Used for receipt &amp; restoring access on new devices</div>
+    </div>
+
+    <!-- Pay Pro -->
+    <button class="pm-pay" id="payProBtn" type="button">
+      💳 Pay ₹99 — Unlock Pro
+    </button>
+
+    <!-- Pay PMGC -->
+    <button class="pm-pay-pmgc" id="pmgcPayBtn" type="button">
+      🔥 Pay ₹199 — Unlock PMGC Elite
+    </button>
+
+    <div class="pm-upi">Supports <span>UPI · Cards · Net Banking · Wallets</span></div>
+
+    <button class="pm-close" id="pmClose" type="button">Maybe Later</button>
+
+    <!-- ── Restore Access ── -->
+    <div class="pm-restore-wrap">
+      <div class="pm-restore-title">Already paid? Restore on this device</div>
+      <div class="pm-restore-row">
+        <input type="email" id="restoreEmail" class="pm-restore-input"
+          placeholder="Enter purchase email" autocomplete="email"/>
+        <button class="pm-restore-btn" id="restoreBtn" type="button">Restore</button>
+      </div>
+      <div class="restore-msg" id="restoreMsg"></div>
+    </div>
+
+    <!-- Fine-tune sliders (paid Pro only) -->
+    <div class="pm-sliders" id="pmSliders">
+      <div class="pm-slider-row">
+        <label for="slGyro">Gyro ±5%</label>
+        <input type="range" id="slGyro" min="-5" max="5" value="0" step="0.5"/>
+        <span class="pm-sval" id="slGyroVal">0%</span>
+      </div>
+      <div class="pm-slider-row">
+        <label for="slADS">ADS ±5%</label>
+        <input type="range" id="slADS" min="-5" max="5" value="0" step="0.5"/>
+        <span class="pm-sval" id="slADSVal">0%</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Scripts -->
+<script type="module" src="src/js/main.js"></script>
+  
+<!-- Mode toggle pill visual sync (lightweight inline) -->
+<script>
+  document.getElementById('modeToggle')?.addEventListener('change', function(){
+    const nl = document.getElementById('modeNormalLabel');
+    const pl = document.getElementById('modePMGCLabel');
+    if(this.checked){ nl?.classList.remove('active-normal'); pl?.classList.add('active-pmgc'); }
+    else            { nl?.classList.add('active-normal');    pl?.classList.remove('active-pmgc'); }
+  });
+</script>
+
+</body>
+</html>

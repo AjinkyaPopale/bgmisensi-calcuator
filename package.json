@@ -1,0 +1,13 @@
+{
+  "name": "bgmi-sensitivity-calculator",
+  "version": "6.1.0",
+  "description": "BGMI Sensitivity Calculator by Ajinkya2OP",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {},
+  "scripts": {
+    "dev": "wrangler pages dev ."
+  }
+}
