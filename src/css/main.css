@@ -696,3 +696,399 @@ footer strong{color:var(--neon)}
 .restore-msg.warn   {color:var(--orange)}
 .restore-msg.error  {color:var(--red)}
 .restore-msg.success{color:var(--neon)}
+
+/* ════════════════════════════════════════════════════════════
+   WORLD-CLASS UI UPGRADE + PSYCHOLOGICAL CONVERSION TRIGGERS
+   Added on top of existing styles — zero breaking changes
+   ════════════════════════════════════════════════════════════ */
+
+/* ── TRIGGER #1: Announcement Bar ───────────────────────── */
+.announce-bar {
+  background: linear-gradient(90deg, rgba(255,107,53,.12), rgba(255,215,0,.08), rgba(255,107,53,.12));
+  border-bottom: 1px solid rgba(255,107,53,.25);
+  padding: 8px 16px;
+  position: relative;
+  z-index: 60;
+  animation: announceSlide .5s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes announceSlide { from{transform:translateY(-100%);opacity:0} to{transform:translateY(0);opacity:1} }
+
+.announce-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.announce-dot {
+  width: 7px; height: 7px;
+  background: #ff6b35;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(255,107,53,.8);
+  animation: dotPulse 1.6s ease-in-out infinite;
+}
+@keyframes dotPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.75)} }
+
+.announce-text {
+  font-family: var(--fb);
+  font-size: .78rem;
+  color: var(--t2);
+  text-align: center;
+}
+.announce-text strong { color: var(--pmgc); }
+
+.announce-close {
+  background: none;
+  border: none;
+  color: var(--t3);
+  cursor: pointer;
+  font-size: .7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  position: absolute;
+  right: 14px;
+  transition: color var(--tr);
+  flex-shrink: 0;
+}
+.announce-close:hover { color: var(--t1); }
+
+/* ── Enhanced header glow when Pro/PMGC unlocked ─────────── */
+.pro-btn {
+  position: relative;
+  overflow: hidden;
+}
+.pro-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,215,0,.18), transparent);
+  transform: translateX(-100%);
+  transition: transform .6s ease;
+}
+.pro-btn:hover::after { transform: translateX(100%); }
+
+/* ── TRIGGER: Modal social proof bar ─────────────────────── */
+.modal-social-proof-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255,107,53,.07);
+  border: 1px solid rgba(255,107,53,.2);
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin-bottom: 18px;
+  font-family: var(--fb);
+  font-size: .78rem;
+  color: var(--t2);
+  animation: fadeInDown .4s ease both;
+}
+@keyframes fadeInDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+
+.msp-dot {
+  width: 6px; height: 6px;
+  background: var(--pmgc);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255,107,53,.9);
+  animation: dotPulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* ── TRIGGER: Star rating row ───────────────────────────── */
+.modal-stars-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.modal-stars {
+  color: #ffd700;
+  font-size: 1.05rem;
+  letter-spacing: 2px;
+  text-shadow: 0 0 12px rgba(255,215,0,.5);
+}
+.modal-stars-text {
+  font-size: .76rem;
+  color: var(--t2);
+}
+.modal-stars-text span { color: var(--neon); font-weight: 700; }
+
+/* ── TRIGGER: "BEST VALUE" badge on PMGC tier card ──────── */
+.pmgc-featured {
+  position: relative;
+  border-color: rgba(255,107,53,.5) !important;
+  box-shadow: 0 0 20px rgba(255,107,53,.12), inset 0 0 20px rgba(255,107,53,.04);
+  transform: scale(1.02);
+}
+
+.tier-best-badge {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #ff6b35, #ffd700);
+  color: #fff;
+  font-family: var(--fd);
+  font-size: .42rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(255,107,53,.4);
+  text-transform: uppercase;
+}
+
+/* Dim the "no" items on free tier to make paid look better */
+.tier-no { opacity: .45; }
+
+/* ── TRIGGER: Featured price box ────────────────────────── */
+.pm-price-featured {
+  border-color: rgba(255,107,53,.4) !important;
+  background: rgba(255,107,53,.07) !important;
+  box-shadow: 0 0 24px rgba(255,107,53,.1);
+  position: relative;
+}
+.pm-price-featured::before {
+  content: 'RECOMMENDED';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg,#ff6b35,#ffd700);
+  color: #fff;
+  font-family: var(--fd);
+  font-size: .38rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+  padding: 2px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.price-context {
+  font-family: var(--fd);
+  font-size: .42rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 4px;
+}
+.pm-price-box.pmgc .price-context { color: var(--pmgc); }
+.pm-price-box.pro  .price-context { color: var(--gold); }
+
+/* ── TRIGGER: Testimonials ──────────────────────────────── */
+.modal-testimonials {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.testi-card {
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: var(--r);
+  padding: 11px 12px;
+  position: relative;
+}
+.testi-card::before {
+  content: '"';
+  position: absolute;
+  top: 6px; left: 10px;
+  font-size: 1.8rem;
+  color: rgba(255,215,0,.15);
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+.testi-stars {
+  color: #ffd700;
+  font-size: .72rem;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+}
+.testi-text {
+  font-size: .72rem;
+  color: var(--t2);
+  line-height: 1.5;
+  margin-bottom: 7px;
+  font-style: italic;
+}
+.testi-author {
+  font-family: var(--fd);
+  font-size: .42rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--t3);
+  text-transform: uppercase;
+}
+
+/* ── TRIGGER: Trust badges ──────────────────────────────── */
+.trust-badges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  padding: 10px;
+  background: rgba(0,245,160,.03);
+  border: 1px solid rgba(0,245,160,.08);
+  border-radius: var(--r);
+}
+.trust-badge {
+  font-size: .68rem;
+  color: var(--t2);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+}
+.trust-badge:not(:last-child) {
+  border-right: 1px solid rgba(255,255,255,.07);
+  padding-right: 8px;
+}
+
+/* ── Enhanced PMGC pay button — bigger, more glowing ────── */
+.pm-pay-pmgc {
+  font-size: .78rem !important;
+  padding: 15px !important;
+  box-shadow: 0 4px 24px rgba(255,107,53,.35), 0 0 0 0 rgba(255,107,53,.4);
+  animation: pmgcPulse 2.5s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+.pm-pay-pmgc::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+  transform: translateX(-100%);
+  animation: shimmer 3s ease infinite;
+}
+@keyframes pmgcPulse {
+  0%,100% { box-shadow: 0 4px 24px rgba(255,107,53,.35), 0 0 0 0 rgba(255,107,53,.2); }
+  50%     { box-shadow: 0 8px 32px rgba(255,107,53,.55), 0 0 0 6px rgba(255,107,53,.0); }
+}
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  50%,100% { transform: translateX(100%); }
+}
+
+/* ── Enhanced Pro button ────────────────────────────────── */
+.pm-pay {
+  box-shadow: 0 4px 20px rgba(255,215,0,.2);
+  transition: all var(--tr);
+}
+.pm-pay:hover {
+  box-shadow: 0 8px 32px rgba(255,215,0,.4) !important;
+}
+
+/* ── Enhanced generate button pulse ────────────────────── */
+.genbtn {
+  box-shadow: 0 4px 24px rgba(0,245,160,.25), 0 0 0 0 rgba(0,245,160,.3);
+  animation: genPulse 3s ease-in-out infinite;
+}
+@keyframes genPulse {
+  0%,100% { box-shadow: 0 4px 24px rgba(0,245,160,.25); }
+  50%     { box-shadow: 0 8px 36px rgba(0,245,160,.45); }
+}
+
+/* ── Enhanced card hover effects ────────────────────────── */
+.card {
+  transition: border-color var(--tr), box-shadow var(--tr);
+}
+.card:hover {
+  border-color: rgba(0,245,160,.1);
+  box-shadow: 0 0 40px rgba(0,245,160,.04);
+}
+
+/* ── PMGC unlock CTA enhanced pulse ─────────────────────── */
+.pmgc-unlock-cta {
+  animation: ctaPulse 2s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+.pmgc-unlock-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+  transform: translateX(-100%);
+  animation: shimmer 2.5s ease infinite;
+}
+@keyframes ctaPulse {
+  0%,100% { box-shadow: 0 4px 20px rgba(255,107,53,.35); }
+  50%     { box-shadow: 0 8px 30px rgba(255,107,53,.6); }
+}
+
+/* ── Upgrade nudge heading — pain-focused ────────────────── */
+.nudge-heading {
+  font-family: var(--fd);
+  font-size: .68rem !important;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--gold) !important;
+  margin-bottom: 12px;
+}
+.nudge-heading::before { content: '⚡'; font-size: 1rem; margin-right: 6px; }
+
+/* ── Pro upgrade bar enhanced ────────────────────────────── */
+.pub {
+  animation: pubGlow 4s ease-in-out infinite alternate;
+}
+@keyframes pubGlow {
+  from { border-color: rgba(255,215,0,.2); box-shadow: none; }
+  to   { border-color: rgba(255,215,0,.4); box-shadow: 0 0 28px rgba(255,215,0,.08); }
+}
+
+/* ── Info card entrance animation ────────────────────────── */
+.ic {
+  animation: icFadeUp .5s cubic-bezier(.22,1,.36,1) both;
+}
+.ic:nth-child(1) { animation-delay: .05s; }
+.ic:nth-child(2) { animation-delay: .10s; }
+.ic:nth-child(3) { animation-delay: .15s; }
+.ic:nth-child(4) { animation-delay: .20s; }
+.ic:nth-child(5) { animation-delay: .25s; }
+@keyframes icFadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── Modal enhanced backdrop ─────────────────────────────── */
+.pro-overlay {
+  background: rgba(2,4,10,.92) !important;
+}
+.pro-modal {
+  box-shadow: 0 0 80px rgba(255,215,0,.1), 0 0 160px rgba(255,107,53,.06), 0 40px 80px rgba(0,0,0,.8) !important;
+}
+
+/* ── PM title — more dramatic ────────────────────────────── */
+.pm-title {
+  background: linear-gradient(90deg, var(--gold), var(--pmgc), var(--gold));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: titleShine 4s linear infinite;
+}
+@keyframes titleShine {
+  from { background-position: 0% center; }
+  to   { background-position: 200% center; }
+}
+
+/* ── Mobile responsive for new elements ──────────────────── */
+@media(max-width:540px) {
+  .modal-testimonials { grid-template-columns: 1fr; }
+  .trust-badges { gap: 4px; }
+  .trust-badge:not(:last-child) { border-right: none; }
+  .announce-text { font-size: .68rem; }
+  .tier-best-badge { font-size: .38rem; }
+}
+
+@media(max-width:760px) {
+  .modal-testimonials { grid-template-columns: 1fr; }
+}
