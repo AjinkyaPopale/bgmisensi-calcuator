@@ -1,13 +1,11 @@
 /**
  * Share Module — Screenshot · Download · Share
  *
- * Features:
- *  · Lazy-loads html2canvas only when first used (no initial perf hit)
- *  · Draws watermark directly on captured canvas (no DOM manipulation)
- *  · Download as high-quality PNG (scale:2)
- *  · Native Web Share API (image on supporting devices)
- *  · WhatsApp text fallback
- *  · Clipboard text fallback
+ * FIXES:
+ *  · Screenshot now opens an IN-PAGE modal (no popup-block issues)
+ *  · Download uses blob URL approach (iOS Safari compatible)
+ *  · Better error handling + fallbacks throughout
+ *  · Mobile-safe on all browsers
  *
  * Wires: #screenshotBtn  #downloadBtn  #shareBtn
  */
@@ -23,45 +21,48 @@ let _h2cReady = false;
 async function loadH2C() {
   if (_h2cReady || window.html2canvas) { _h2cReady = true; return; }
   return new Promise((resolve, reject) => {
-    const s  = document.createElement('script');
-    s.src    = H2C_CDN;
-    s.async  = true;
-    s.onload = () => { _h2cReady = true; resolve(); };
+    const s   = document.createElement('script');
+    s.src     = H2C_CDN;
+    s.async   = true;
+    s.onload  = () => { _h2cReady = true; resolve(); };
     s.onerror = () => reject(new Error('html2canvas failed to load'));
     document.head.appendChild(s);
   });
 }
 
-// ── Capture #rc card → canvas with watermark ─────────────
+// ── Capture #rc card canvas with watermark ────────────────
 async function captureResultCard() {
   await loadH2C();
-
   const el = document.getElementById('rc');
-  if (!el) return null;
+  if (!el || el.hidden) return null;
 
-  const canvas = await window.html2canvas(el, {
-    backgroundColor: '#0d1120',
-    scale:           2,
-    useCORS:         true,
-    logging:         false,
-    // Exclude share buttons from capture so they don't appear in image
-    ignoreElements: (node) =>
-      node.id === 'shareActs' ||
-      node.classList?.contains('share-acts'),
-  });
+  const shareActs  = document.getElementById('shareActs');
+  const wasVisible = shareActs && !shareActs.hidden;
+  if (wasVisible) shareActs.hidden = true;
 
-  // ── Draw watermark on captured canvas ──────────────────
+  let canvas;
+  try {
+    canvas = await window.html2canvas(el, {
+      backgroundColor: '#0d1120',
+      scale:           2,
+      useCORS:         true,
+      allowTaint:      true,
+      logging:         false,
+      removeContainer: true,
+      imageTimeout:    5000,
+    });
+  } finally {
+    if (wasVisible && shareActs) shareActs.hidden = false;
+  }
+
   const ctx      = canvas.getContext('2d');
   const fontSize = Math.max(14, Math.floor(canvas.width * 0.018));
   const padY     = fontSize * 1.6;
 
-  // Subtle semi-transparent bar at bottom
-  ctx.fillStyle = 'rgba(0,0,0,0.38)';
+  ctx.fillStyle = 'rgba(0,0,0,0.42)';
   ctx.fillRect(0, canvas.height - padY * 1.4, canvas.width, padY * 1.4);
-
-  // Watermark text
   ctx.font         = `600 ${fontSize}px 'Rajdhani', sans-serif`;
-  ctx.fillStyle    = 'rgba(0,245,160,0.6)';
+  ctx.fillStyle    = 'rgba(0,245,160,0.65)';
   ctx.textAlign    = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(WATERMARK_TEXT, canvas.width / 2, canvas.height - padY * 0.65);
@@ -69,115 +70,183 @@ async function captureResultCard() {
   return canvas;
 }
 
-// ── Download PNG ──────────────────────────────────────────
-async function downloadImage() {
-  const btn = document.getElementById('downloadBtn');
-  if (btn) { btn.textContent = '⏳ Capturing…'; btn.disabled = true; }
+// ── Create in-page screenshot modal ──────────────────────
+function createScreenshotModal() {
+  const overlay  = document.createElement('div');
+  overlay.id     = 'screenshotModal';
+  overlay.hidden = true;
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
 
-  try {
-    const canvas  = await captureResultCard();
-    if (!canvas)  { showToast('❌ Nothing to capture yet.', 'error'); return; }
+  overlay.innerHTML = `
+    <div class="ss-inner">
+      <div class="ss-header">
+        <div class="ss-title">📸 Sensitivity Card Ready</div>
+        <button class="ss-close" id="ssClose" type="button" aria-label="Close">✕</button>
+      </div>
+      <div class="ss-tips-row">
+        <span class="ss-tip-badge ss-tip-mobile">📱 Long press → Save</span>
+        <span class="ss-tip-badge ss-tip-desktop">💻 Right-click → Save image as</span>
+        <span class="ss-tip-badge">🔥 Share with your squad</span>
+      </div>
+      <div class="ss-img-wrap">
+        <img id="ssImg" class="ss-img" src="" alt="BGMI Sensitivity Screenshot" draggable="true"/>
+      </div>
+      <div class="ss-actions">
+        <button class="ss-dl-btn" id="ssDlBtn" type="button">⬇️ Download PNG</button>
+        <button class="ss-wa-btn" id="ssWaBtn" type="button">📤 Share</button>
+      </div>
+    </div>
+  `;
 
-    const dataUrl = canvas.toDataURL('image/png', 1.0);
-    const a       = document.createElement('a');
-    a.href        = dataUrl;
-    a.download    = `bgmi-sensitivity-ajinkya2op-${Date.now()}.png`;
-    a.click();
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeScreenshotModal(overlay);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !overlay.hidden) closeScreenshotModal(overlay);
+  });
+  document.body.appendChild(overlay);
 
-    showToast('✅ Image downloaded!', 'success');
-  } catch (err) {
-    showToast('❌ Download failed. Try Copy instead.', 'error');
-  } finally {
-    if (btn) { btn.textContent = '⬇️ Download'; btn.disabled = false; }
-  }
+  overlay.querySelector('#ssClose')?.addEventListener('click', () => closeScreenshotModal(overlay));
+  return overlay;
 }
 
-// ── Open screenshot preview (new tab) ────────────────────
+function closeScreenshotModal(overlay) {
+  overlay.classList.add('ss-exit');
+  setTimeout(() => {
+    overlay.hidden = true;
+    overlay.classList.remove('ss-exit');
+  }, 220);
+}
+
+function getOrCreateModal() {
+  return document.getElementById('screenshotModal') || createScreenshotModal();
+}
+
+// ── Trigger file download from dataUrl ───────────────────
+function triggerDownload(dataUrl) {
+  const filename = `bgmi-sensitivity-ajinkya2op-${Date.now()}.png`;
+  // Blob URL is more reliable than dataURL for iOS Safari
+  fetch(dataUrl)
+    .then(r => r.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a   = Object.assign(document.createElement('a'), { href: url, download: filename });
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 15000);
+      showToast('✅ Image downloaded!', 'success');
+    })
+    .catch(() => {
+      // Direct fallback
+      const a = Object.assign(document.createElement('a'), { href: dataUrl, download: filename });
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('✅ Downloaded!', 'success');
+    });
+}
+
+// ── Open in-page screenshot preview ──────────────────────
 async function openScreenshot() {
   const btn = document.getElementById('screenshotBtn');
   if (btn) { btn.textContent = '⏳ Rendering…'; btn.disabled = true; }
 
   try {
     const canvas = await captureResultCard();
-    if (!canvas) { showToast('❌ Nothing to capture yet.', 'error'); return; }
+    if (!canvas) { showToast('❌ Generate a sensitivity first!', 'error'); return; }
 
-    // Open in new tab so user can long-press save on mobile
-    const dataUrl  = canvas.toDataURL('image/png', 1.0);
-    const newTab   = window.open();
-    if (newTab) {
-      newTab.document.write(
-        `<html><head><title>BGMI Sensitivity — Ajinkya2OP</title></head>` +
-        `<body style="margin:0;background:#080b12;display:flex;justify-content:center;align-items:flex-start;padding:20px">` +
-        `<img src="${dataUrl}" style="max-width:100%;border-radius:12px;box-shadow:0 8px 40px rgba(0,245,160,.2)"/></body></html>`,
-      );
-      newTab.document.close();
-    } else {
-      // Pop-up blocked — fall back to direct download
-      await downloadImage();
-    }
-  } catch {
-    showToast('❌ Screenshot failed. Try Download.', 'error');
+    const dataUrl = canvas.toDataURL('image/png', 1.0);
+    const modal   = getOrCreateModal();
+    const img     = modal.querySelector('#ssImg');
+    const dlBtn   = modal.querySelector('#ssDlBtn');
+    const waBtn   = modal.querySelector('#ssWaBtn');
+
+    if (img) img.src = dataUrl;
+    if (dlBtn) dlBtn.onclick = () => triggerDownload(dataUrl);
+    if (waBtn) waBtn.onclick = () => shareImage(dataUrl);
+
+    modal.hidden = false;
+    setTimeout(() => modal.querySelector('#ssClose')?.focus(), 60);
+    showToast('✅ Screenshot ready!', 'success');
+  } catch (err) {
+    console.error('[screenshot]', err);
+    showToast('❌ Screenshot failed — try Download instead.', 'error');
   } finally {
     if (btn) { btn.textContent = '📸 Screenshot'; btn.disabled = false; }
   }
 }
 
-// ── Share ─────────────────────────────────────────────────
+// ── Download PNG directly ─────────────────────────────────
+async function downloadImage() {
+  const btn = document.getElementById('downloadBtn');
+  if (btn) { btn.textContent = '⏳ Capturing…'; btn.disabled = true; }
+
+  try {
+    const canvas = await captureResultCard();
+    if (!canvas) { showToast('❌ Generate a sensitivity first!', 'error'); return; }
+    triggerDownload(canvas.toDataURL('image/png', 1.0));
+  } catch (err) {
+    console.error('[download]', err);
+    showToast('❌ Download failed — try Copy All instead.', 'error');
+  } finally {
+    if (btn) { btn.textContent = '⬇️ Download'; btn.disabled = false; }
+  }
+}
+
+// ── Native share or fallback ──────────────────────────────
+async function shareImage(dataUrl) {
+  const text  = document.getElementById('ot')?.textContent ?? '';
+  const title = 'My BGMI Sensitivity by Ajinkya2OP 🔥';
+  const shareText = `${title}\n\n${text}\n\nhttps://bgmisensi-calcuator.pages.dev/`;
+
+  if (navigator.share) {
+    try {
+      if (dataUrl && navigator.canShare) {
+        const blob = await (await fetch(dataUrl)).blob();
+        const file = new File([blob], 'bgmi-sensitivity.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ title, text: shareText, files: [file] });
+          showToast('✅ Shared!', 'success');
+          return;
+        }
+      }
+      await navigator.share({ title, text: shareText });
+      showToast('✅ Shared!', 'success');
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
+  }
+  const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+  window.open(waUrl, '_blank', 'noopener');
+  showToast('📤 Opening WhatsApp…', 'default');
+}
+
+// ── Share button handler ──────────────────────────────────
 async function share() {
   const btn  = document.getElementById('shareBtn');
   const text = document.getElementById('ot')?.textContent ?? '';
   if (!text.trim()) { showToast('Generate your sensitivity first!', 'warn'); return; }
 
-  const title    = 'My BGMI Sensitivity by Ajinkya2OP 🔥';
-  const shareText = `${title}\n\n${text}\n\nGenerated at: ajinkya2op.netlify.app`;
-
   if (btn) { btn.textContent = '⏳…'; btn.disabled = true; }
-
   try {
-    // ── Try native share with image ──────────────────────
-    if (navigator.share) {
-      try {
-        // Build image file for share
-        const canvas   = await captureResultCard();
-        const dataUrl  = canvas?.toDataURL('image/png', 1.0);
-
-        if (dataUrl && navigator.canShare) {
-          const blob = await (await fetch(dataUrl)).blob();
-          const file = new File([blob], 'bgmi-sensitivity.png', { type: 'image/png' });
-          if (navigator.canShare({ files: [file] })) {
-            await navigator.share({ title, text: shareText, files: [file] });
-            showToast('✅ Shared!', 'success');
-            return;
-          }
-        }
-        // Text-only share fallback
-        await navigator.share({ title, text: shareText });
-        showToast('✅ Shared!', 'success');
-        return;
-      } catch (e) {
-        if (e.name === 'AbortError') return; // User cancelled — not an error
-      }
-    }
-
-    // ── WhatsApp fallback ────────────────────────────────
-    const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
-    window.open(waUrl, '_blank', 'noopener');
-    showToast('📤 Opening WhatsApp…', 'default');
-
+    await shareImage(null);
   } catch {
-    // ── Copy to clipboard as last resort ─────────────────
     try {
+      const shareText = `My BGMI Sensitivity by Ajinkya2OP 🔥\n\n${text}\n\nhttps://bgmisensi-calcuator.pages.dev/`;
       await navigator.clipboard.writeText(shareText);
-      showToast('📋 Sensitivity copied — paste anywhere to share!', 'success', 4000);
+      showToast('📋 Sensitivity copied — paste to share!', 'success', 4000);
     } catch {
-      showToast('❌ Share failed. Use Copy instead.', 'error');
+      showToast('❌ Share failed. Use Copy All instead.', 'error');
     }
   } finally {
     if (btn) { btn.textContent = '🔗 Share'; btn.disabled = false; }
   }
 }
 
-// ── Public init — call once from main.js ─────────────────
+// ── Public init ───────────────────────────────────────────
 export function initShareButtons() {
   document.getElementById('screenshotBtn')?.addEventListener('click', openScreenshot);
   document.getElementById('downloadBtn')?.addEventListener('click', downloadImage);
