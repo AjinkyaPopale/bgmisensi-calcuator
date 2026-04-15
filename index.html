@@ -31,6 +31,7 @@
 <div class="bg-grid"  aria-hidden="true"></div>
 <div class="bg-glow"  aria-hidden="true"></div>
 <div class="bg-glow2" aria-hidden="true"></div>
+<div class="bg-glow3" aria-hidden="true"></div>
 
 <header>
   <div class="hi">
@@ -221,7 +222,8 @@
 
     <div class="rph" id="ph" aria-label="Generate sensitivity to see results">
       <div class="phi" aria-hidden="true">🎯</div>
-      <div class="pht">Configure your setup<br/>and hit Generate<br/>to see output</div>
+      <div class="pht">Configure your setup<br/>and hit Generate<br/>to see your output</div>
+      <div style="margin-top:8px;font-size:.7rem;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;opacity:.6">Used by 3,000+ players this week</div>
     </div>
 
     <section class="card rcard" id="rc" hidden aria-label="Sensitivity output">
@@ -509,6 +511,18 @@
   </div>
 </div>
 
+<!-- STICKY MOBILE BOTTOM CTA -->
+<div id="mobileStickyCTA" role="complementary" aria-label="Upgrade offer">
+  <div class="sticky-cta-inner">
+    <div class="sticky-cta-text">
+      <div class="sticky-cta-title">🔥 PMGC Elite — Tournament Level</div>
+      <div class="sticky-cta-sub">One-time ₹199 · Less than 2 UC · Forever</div>
+    </div>
+    <button class="sticky-cta-btn" id="stickyCTABtn" type="button">Unlock Now</button>
+    <button class="sticky-cta-dismiss" id="stickyCTADismiss" aria-label="Dismiss">✕</button>
+  </div>
+</div>
+
 <script type="module" src="src/js/main.js"></script>
 
 <script>
@@ -520,9 +534,9 @@
   });
 </script>
 
-<!-- PSYCHOLOGICAL TRIGGER: Live counter — FOMO, UI only, no payment logic -->
 <script>
 (function(){
+  /* Live counter */
   var base = 3200 + Math.floor(Math.random() * 80);
   var liveEl   = document.getElementById('liveCount');
   var modalEl  = document.getElementById('modalLiveCount');
@@ -540,6 +554,69 @@
     setTimeout(tick, 18000 + Math.random() * 22000);
   }
   setTimeout(tick, 18000 + Math.random() * 22000);
+})();
+</script>
+
+<script>
+/* ── Generate button loading state enhancement ── */
+(function(){
+  var form = document.getElementById('f');
+  var btn  = form && form.querySelector('.genbtn');
+  if(!form || !btn) return;
+  var origContent = btn.innerHTML;
+  form.addEventListener('submit', function(){
+    btn.classList.add('generating');
+    btn.innerHTML = '<span>Calculating…</span><span class="gar" aria-hidden="true">⟳</span>';
+    setTimeout(function(){
+      btn.classList.remove('generating');
+      btn.innerHTML = origContent;
+    }, 900);
+  });
+})();
+
+/* ── Sticky mobile CTA wiring ── */
+(function(){
+  var cta     = document.getElementById('mobileStickyCTA');
+  var ctaBtn  = document.getElementById('stickyCTABtn');
+  var dismiss = document.getElementById('stickyCTADismiss');
+  var proBtn  = document.getElementById('proHeaderBtn');
+
+  if(ctaBtn && proBtn){
+    ctaBtn.addEventListener('click', function(){ proBtn.click(); });
+  }
+  if(dismiss && cta){
+    dismiss.addEventListener('click', function(){
+      cta.style.transition = 'transform .3s ease, opacity .3s';
+      cta.style.transform  = 'translateY(100%)';
+      cta.style.opacity    = '0';
+      setTimeout(function(){ cta.hidden = true; }, 320);
+    });
+  }
+  /* Auto-dismiss sticky CTA after Pro/PMGC unlocked */
+  document.addEventListener('click', function(e){
+    if(cta && !cta.hidden){
+      var chip = document.getElementById('versionChip');
+      if(chip && (chip.classList.contains('chip-pro') || chip.classList.contains('chip-pmgc'))){
+        cta.hidden = true;
+      }
+    }
+  });
+})();
+
+/* ── Animated number reveal in result output ── */
+(function(){
+  var ob = document.getElementById('ot');
+  if(!ob) return;
+  var observer = new MutationObserver(function(){
+    ob.style.opacity = '0';
+    ob.style.transform = 'translateY(6px)';
+    requestAnimationFrame(function(){
+      ob.style.transition = 'opacity .3s ease, transform .3s ease';
+      ob.style.opacity    = '1';
+      ob.style.transform  = 'translateY(0)';
+    });
+  });
+  observer.observe(ob, { childList: true, characterData: true, subtree: true });
 })();
 </script>
 
