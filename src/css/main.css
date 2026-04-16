@@ -996,6 +996,11 @@ select.sg:focus { border-color: rgba(255,215,0,.5);    box-shadow: 0 0 0 3px rgb
   display: flex; align-items: center; justify-content: center; padding: 20px;
   animation: fadeIn .22s ease both;
 }
+#screenshotModal.ss-exit {
+  animation: fadeOut .22s ease both;
+  pointer-events: none;
+}
+@keyframes fadeOut { from{opacity:1} to{opacity:0} }
 .ss-inner {
   background: rgba(10,15,26,.98); border: 1px solid rgba(0,245,160,.22);
   border-radius: var(--rXL); padding: 24px; max-width: 520px; width: 100%;
