@@ -34,35 +34,46 @@ async function loadH2C() {
 async function captureResultCard() {
   await loadH2C();
   const el = document.getElementById('rc');
-  if (!el || el.hidden) return null;
+  if (!el || el.hidden || el.getAttribute('hidden') !== null) return null;
 
+  // Briefly unhide share actions row so we can hide it cleanly
   const shareActs  = document.getElementById('shareActs');
   const wasVisible = shareActs && !shareActs.hidden;
   if (wasVisible) shareActs.hidden = true;
 
+  // Grab the actual computed card background for accurate capture
+  const cardBg = '#0c1020';
+
   let canvas;
   try {
     canvas = await window.html2canvas(el, {
-      backgroundColor: '#0d1120',
+      backgroundColor: cardBg,
       scale:           2,
       useCORS:         true,
       allowTaint:      true,
       logging:         false,
       removeContainer: true,
-      imageTimeout:    5000,
+      imageTimeout:    8000,
+      windowWidth:     el.scrollWidth  + 40,
+      windowHeight:    el.scrollHeight + 40,
+      x:               0,
+      y:               0,
+      scrollX:         0,
+      scrollY:         0,
     });
   } finally {
     if (wasVisible && shareActs) shareActs.hidden = false;
   }
 
+  // ── Watermark ──────────────────────────────────────────
   const ctx      = canvas.getContext('2d');
   const fontSize = Math.max(14, Math.floor(canvas.width * 0.018));
   const padY     = fontSize * 1.6;
 
-  ctx.fillStyle = 'rgba(0,0,0,0.42)';
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
   ctx.fillRect(0, canvas.height - padY * 1.4, canvas.width, padY * 1.4);
   ctx.font         = `600 ${fontSize}px 'Rajdhani', sans-serif`;
-  ctx.fillStyle    = 'rgba(0,245,160,0.65)';
+  ctx.fillStyle    = 'rgba(0,245,160,0.7)';
   ctx.textAlign    = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(WATERMARK_TEXT, canvas.width / 2, canvas.height - padY * 0.65);
