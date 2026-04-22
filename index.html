@@ -18,6 +18,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 
   <link rel="stylesheet" href="src/css/main.css"/>
+  <link rel="stylesheet" href="src/css/conversion.css"/>
   <script src="https://sdk.cashfree.com/js/v3/cashfree.js" defer></script>
 </head>
 <body>
@@ -941,6 +942,24 @@
       <div class="modal-stars-text">Rated 4.9/5 by <span id="ratingCount">2,847</span> players</div>
     </div>
 
+    <!-- URGENCY COUNTDOWN -->
+    <div class="modal-urgency-strip" id="modalUrgencyStrip">
+      <span class="urgency-label">⚡ Tournament Season Price</span>
+      <span class="urgency-timer" id="urgencyTimer">--:--:--</span>
+      <span class="urgency-note">then price resets</span>
+    </div>
+
+    <!-- VIEWERS NOW -->
+    <div class="modal-viewers-bar">
+      <div class="viewers-avatars">
+        <div class="viewer-dot">RK</div>
+        <div class="viewer-dot">AS</div>
+        <div class="viewer-dot">VP</div>
+        <div class="viewer-dot">NR</div>
+      </div>
+      <span class="viewers-text"><span class="viewers-count" id="viewersNow">23</span> players viewing this right now</span>
+    </div>
+
     <!-- Tier comparison -->
     <div class="tier-row">
       <div class="tier-card free">
@@ -963,6 +982,7 @@
       </div>
       <div class="tier-card pmgc pmgc-featured">
         <div class="tier-best-badge">🔥 MOST POPULAR</div>
+        <div class="scarcity-badge"><span class="scarcity-dot"></span>Limited Slots Left</div>
         <div class="tier-label">PMGC Elite 🔥</div>
         <div class="tier-item">✅ PMGC elite base</div>
         <div class="tier-item">✅ Tournament tuning</div>
@@ -985,7 +1005,8 @@
         <div class="price-context">For Competitive Players</div>
         <div class="price">₹199</div>
         <div class="price-label">PMGC Elite — One-time</div>
-        <div class="price-note">Less than 2 UC · Forever yours</div>
+        <div class="price-note">Less than 1 pizza price · Forever yours</div>
+        <div class="price-anchor">= Cost of 1 chai per month 🍵</div>
       </div>
     </div>
 
@@ -1006,6 +1027,20 @@
     <button class="pm-pay-pmgc" id="pmgcPayBtn" type="button">
       🔥 Get PMGC Elite Tournament Pack — ₹199
     </button>
+
+    <!-- Recent buy ticker -->
+    <div class="modal-recent-buys">
+      <div class="mrb-item" id="mrbItem">
+        <span class="mrb-dot pmgc-dot"></span>
+        <span id="mrbText">Checking recent activity...</span>
+      </div>
+    </div>
+
+    <!-- Guarantee row -->
+    <div class="pm-guarantee-row">
+      <span class="pm-guarantee-icon">🔒</span>
+      <span>Secure UPI / Card · Instant access · Restore anytime</span>
+    </div>
 
     <!-- Trust badges -->
     <div class="trust-badges">
@@ -1187,6 +1222,44 @@ document.getElementById('modeToggle')?.addEventListener('change', function() {
 
 })();
 </script>
+
+<!-- CONVERSION ENGINE -->
+<script type="module" src="src/js/conversion.js"></script>
+
+<!-- LIVE PURCHASE NOTIFICATIONS -->
+<div id="liveNotifContainer" aria-live="polite" aria-label="Recent purchases"></div>
+
+<!-- EXIT INTENT OVERLAY -->
+<div id="exitIntentOverlay" role="dialog" aria-modal="true" aria-label="Special offer">
+  <div class="exit-modal">
+    <button class="exit-close-x" id="exitCloseX" aria-label="Close">✕</button>
+    <span class="exit-modal-emoji">⚡</span>
+    <div class="exit-modal-headline">Wait — Before You Leave</div>
+    <div class="exit-modal-sub">
+      Your free sensitivity is good.<br/>
+      But serious players use the tournament engine.
+    </div>
+    <div class="exit-offer-box">
+      <div class="exit-offer-label">🔥 PMGC Elite Tournament Pack</div>
+      <div class="exit-offer-title">Tournament-Grade Sensitivity Engine</div>
+      <div class="exit-offer-price">₹199 <span style="font-size:.9rem;color:#6880a4;font-weight:400">one-time</span></div>
+      <div class="exit-offer-note">Less than one pizza price · Lifetime access · Restore anytime</div>
+    </div>
+    <button class="exit-cta-btn" id="exitCTABtn">🔥 Unlock PMGC Elite Now — ₹199</button>
+    <button class="exit-dismiss-btn" id="exitDismissBtn">No thanks, I'll stay with free</button>
+  </div>
+</div>
+
+<!-- FLOATING UPGRADE PILL -->
+<div id="floatUpgradePill">
+  <button class="float-pill-btn" id="floatPillBtn" aria-label="Upgrade to PMGC Elite">
+    <span class="float-pill-fire">🔥</span>
+    <div>
+      <div class="float-pill-text">PMGC Elite</div>
+      <div class="float-pill-price">₹199</div>
+    </div>
+  </button>
+</div>
 
 </body>
 </html>
