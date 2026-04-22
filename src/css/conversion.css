@@ -1,0 +1,581 @@
+/* ═══════════════════════════════════════════════════════════
+   CONVERSION PSYCHOLOGY LAYER
+   Ajinkya2OP BGMI Calculator — High-Conversion UI Additions
+   DO NOT TOUCH: calculator logic, existing class names, IDs
+═══════════════════════════════════════════════════════════ */
+
+/* ════ 1. LIVE PURCHASE NOTIFICATION TOASTS ════ */
+#liveNotifContainer {
+  position: fixed;
+  bottom: 90px;
+  left: 16px;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  pointer-events: none;
+}
+.live-notif {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(8, 14, 28, 0.97);
+  border: 1px solid rgba(0, 245, 160, 0.22);
+  border-radius: 12px;
+  padding: 10px 14px;
+  min-width: 240px;
+  max-width: 300px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.55), 0 0 0 1px rgba(0,245,160,.06);
+  animation: notifIn .4s cubic-bezier(.22,1,.36,1) forwards,
+             notifOut .4s ease .4s forwards;
+  animation-delay: 0s, 4s;
+  pointer-events: none;
+}
+.live-notif.pmgc-notif {
+  border-color: rgba(255, 107, 53, 0.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,.55), 0 0 0 1px rgba(255,107,53,.08);
+}
+@keyframes notifIn {
+  from { opacity: 0; transform: translateX(-24px) scale(.96); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes notifOut {
+  from { opacity: 1; transform: translateX(0); max-height: 80px; margin-bottom: 0; }
+  to   { opacity: 0; transform: translateX(-16px); max-height: 0; margin-bottom: -8px; }
+}
+.notif-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0,245,160,.18), rgba(0,200,255,.12));
+  border: 1px solid rgba(0,245,160,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: .44rem;
+  font-weight: 700;
+  color: #00f5a0;
+  flex-shrink: 0;
+}
+.pmgc-notif .notif-avatar {
+  background: linear-gradient(135deg, rgba(255,107,53,.18), rgba(255,215,0,.1));
+  border-color: rgba(255,107,53,.35);
+  color: #ff6b35;
+}
+.notif-body { flex: 1; min-width: 0; }
+.notif-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .5rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: #edf2fa;
+  text-transform: uppercase;
+}
+.notif-action {
+  font-size: .68rem;
+  color: #6880a4;
+  line-height: 1.4;
+  margin-top: 1px;
+}
+.notif-tier {
+  font-size: .62rem;
+  font-weight: 700;
+  color: #00f5a0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.pmgc-notif .notif-tier { color: #ff6b35; }
+.notif-pulse {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #00f5a0;
+  flex-shrink: 0;
+  animation: pulseGreen 1.4s infinite;
+}
+.pmgc-notif .notif-pulse { background: #ff6b35; animation: pulseOrange 1.4s infinite; }
+@keyframes pulseGreen {
+  0%,100% { box-shadow: 0 0 0 0 rgba(0,245,160,.5); }
+  50%      { box-shadow: 0 0 0 5px rgba(0,245,160,0); }
+}
+@keyframes pulseOrange {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,107,53,.5); }
+  50%      { box-shadow: 0 0 0 5px rgba(255,107,53,0); }
+}
+
+/* ════ 2. EXIT INTENT OVERLAY ════ */
+#exitIntentOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3,6,14,.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+#exitIntentOverlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+.exit-modal {
+  background: #0c1020;
+  border: 1px solid rgba(255,107,53,.3);
+  border-radius: 24px;
+  padding: 40px 32px 32px;
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 0 0 1px rgba(255,107,53,.08), 0 32px 80px rgba(0,0,0,.7);
+  animation: exitModalIn .4s cubic-bezier(.22,1,.36,1);
+}
+@keyframes exitModalIn {
+  from { transform: scale(.92) translateY(20px); opacity: 0; }
+  to   { transform: scale(1) translateY(0);     opacity: 1; }
+}
+.exit-modal-emoji { font-size: 3rem; display: block; margin-bottom: 12px; line-height: 1; }
+.exit-modal-headline {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #ff6b35;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.exit-modal-sub {
+  font-size: .82rem;
+  color: #6880a4;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+.exit-offer-box {
+  background: linear-gradient(135deg, rgba(255,107,53,.06), rgba(255,215,0,.04));
+  border: 1px solid rgba(255,107,53,.25);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.exit-offer-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .48rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #ff6b35;
+  margin-bottom: 6px;
+}
+.exit-offer-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .82rem;
+  font-weight: 700;
+  color: #edf2fa;
+  margin-bottom: 4px;
+}
+.exit-offer-price {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #ffd700;
+  letter-spacing: .03em;
+}
+.exit-offer-note {
+  font-size: .68rem;
+  color: #6880a4;
+  margin-top: 2px;
+}
+.exit-cta-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  border: none;
+  border-radius: 12px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: all .2s ease;
+  box-shadow: 0 4px 20px rgba(255,107,53,.35);
+}
+.exit-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,107,53,.45); }
+.exit-dismiss-btn {
+  background: none;
+  border: none;
+  font-size: .72rem;
+  color: #35476a;
+  cursor: pointer;
+  padding: 6px;
+  transition: color .2s;
+}
+.exit-dismiss-btn:hover { color: #6880a4; }
+.exit-close-x {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: none;
+  border: none;
+  color: #35476a;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color .2s;
+}
+.exit-close-x:hover { color: #6880a4; }
+
+/* ════ 3. URGENCY COUNTDOWN IN MODAL ════ */
+.modal-urgency-strip {
+  background: linear-gradient(135deg, rgba(255,77,109,.08), rgba(255,107,53,.06));
+  border: 1px solid rgba(255,77,109,.2);
+  border-radius: 10px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.urgency-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .48rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #ff4d6d;
+}
+.urgency-timer {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .78rem;
+  font-weight: 900;
+  color: #ff4d6d;
+  letter-spacing: .08em;
+  background: rgba(255,77,109,.1);
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+.urgency-note {
+  font-size: .65rem;
+  color: #6880a4;
+}
+
+/* ════ 4. VIEWERS COUNTER IN MODAL ════ */
+.modal-viewers-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-size: .72rem;
+  color: #6880a4;
+}
+.viewers-avatars {
+  display: flex;
+}
+.viewer-dot {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid #0c1020;
+  background: linear-gradient(135deg, rgba(0,245,160,.2), rgba(0,200,255,.15));
+  display: flex; align-items: center; justify-content: center;
+  font-size: .38rem;
+  font-family: 'Orbitron', sans-serif;
+  color: #00f5a0;
+  font-weight: 700;
+  margin-left: -6px;
+}
+.viewer-dot:first-child { margin-left: 0; }
+.viewers-text { font-size: .68rem; color: #6880a4; }
+.viewers-count { color: #00f5a0; font-weight: 700; }
+
+/* ════ 5. POST-GENERATION UPGRADE CARD ════ */
+#postGenUpgradeCard {
+  background: linear-gradient(135deg, #0d1528, #0a1020);
+  border: 1px solid rgba(255, 107, 53, 0.25);
+  border-radius: 18px;
+  padding: 22px 20px;
+  margin-top: 14px;
+  position: relative;
+  overflow: hidden;
+  animation: slideUp .5s cubic-bezier(.22,1,.36,1);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+#postGenUpgradeCard::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, #ff6b35, #ffd700, transparent);
+}
+.pguc-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.pguc-fire { font-size: 1.2rem; }
+.pguc-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #ff6b35;
+}
+.pguc-sub {
+  font-size: .7rem;
+  color: #6880a4;
+  font-family: 'Orbitron', sans-serif;
+  font-size: .42rem;
+}
+.pguc-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.pguc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  background: rgba(255,107,53,.05);
+  border: 1px solid rgba(255,107,53,.12);
+  border-radius: 9px;
+  padding: 10px;
+}
+.pguc-item-icon { font-size: .9rem; flex-shrink: 0; line-height: 1.3; }
+.pguc-item-body {}
+.pguc-item-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .44rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #edf2fa;
+  margin-bottom: 2px;
+}
+.pguc-item-desc { font-size: .65rem; color: #6880a4; line-height: 1.4; }
+.pguc-cta-row {
+  display: flex;
+  gap: 8px;
+}
+.pguc-cta-pro {
+  flex: 1;
+  padding: 11px;
+  background: rgba(0,245,160,.08);
+  border: 1px solid rgba(0,245,160,.3);
+  border-radius: 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: .48rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #00f5a0;
+  cursor: pointer;
+  transition: all .2s;
+  text-align: center;
+  line-height: 1.3;
+}
+.pguc-cta-pro:hover { background: rgba(0,245,160,.14); transform: translateY(-1px); }
+.pguc-cta-pmgc {
+  flex: 1.4;
+  padding: 11px;
+  background: linear-gradient(135deg, rgba(255,107,53,.15), rgba(255,140,66,.1));
+  border: 1px solid rgba(255,107,53,.4);
+  border-radius: 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: .48rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #ff8c42;
+  cursor: pointer;
+  transition: all .2s;
+  text-align: center;
+  line-height: 1.3;
+  box-shadow: 0 0 16px rgba(255,107,53,.12);
+}
+.pguc-cta-pmgc:hover { background: linear-gradient(135deg, rgba(255,107,53,.22), rgba(255,140,66,.16)); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,107,53,.2); }
+
+/* ════ 6. SCARCITY BADGE ON MODAL PMGC CARD ════ */
+.scarcity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,77,109,.1);
+  border: 1px solid rgba(255,77,109,.25);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: .42rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #ff4d6d;
+  margin-bottom: 8px;
+}
+.scarcity-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #ff4d6d;
+  animation: pulseRed 1.2s infinite;
+}
+@keyframes pulseRed {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,77,109,.6); }
+  50%      { box-shadow: 0 0 0 4px rgba(255,77,109,0); }
+}
+
+/* ════ 7. PRICE ANCHOR TEXT ════ */
+.price-anchor {
+  font-size: .62rem;
+  color: rgba(255,215,0,.7);
+  margin-top: 4px;
+  font-style: italic;
+}
+.price-strike {
+  text-decoration: line-through;
+  color: #35476a;
+  margin-right: 4px;
+}
+
+/* ════ 8. SOCIAL PROOF TICKER (below modal buttons) ════ */
+.modal-recent-buys {
+  margin: 12px 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgba(0,0,0,.2);
+  padding: 8px 12px;
+}
+.mrb-item {
+  font-size: .68rem;
+  color: #6880a4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: tickerSlide 10s linear infinite;
+}
+.mrb-dot { width: 5px; height: 5px; border-radius: 50%; background: #00f5a0; flex-shrink: 0; }
+.pmgc-dot { background: #ff6b35; }
+@keyframes tickerSlide {
+  0%   { opacity: 0; transform: translateY(8px); }
+  8%   { opacity: 1; transform: translateY(0); }
+  85%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
+/* ════ 9. ENHANCED PMGC PREVIEW LOCK ════ */
+.pmgc-lock-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(6, 9, 16, 0.92),
+    rgba(12, 16, 32, 0.88)
+  );
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.pmgc-lock-value-preview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 3;
+}
+.pmgc-unlock-cta {
+  background: linear-gradient(135deg, #ff6b35, #ff8c42) !important;
+  box-shadow: 0 4px 24px rgba(255,107,53,.4) !important;
+  animation: ctaPulse 2.5s ease infinite !important;
+}
+@keyframes ctaPulse {
+  0%,100% { box-shadow: 0 4px 24px rgba(255,107,53,.4); }
+  50%      { box-shadow: 0 4px 32px rgba(255,107,53,.65); }
+}
+
+/* ════ 10. RESULT CARD UPGRADE GLOW ════ */
+.rcard-has-upgrade {
+  border-color: rgba(255,107,53,.15) !important;
+}
+
+/* ════ 11. FLOATING SCROLL-TRIGGERED UPGRADE PILL ════ */
+#floatUpgradePill {
+  position: fixed;
+  top: 80px;
+  right: 16px;
+  z-index: 800;
+  transform: translateX(120%);
+  transition: transform .4s cubic-bezier(.22,1,.36,1);
+}
+#floatUpgradePill.visible {
+  transform: translateX(0);
+}
+.float-pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(255,107,53,.15), rgba(255,140,66,.08));
+  border: 1px solid rgba(255,107,53,.4);
+  border-radius: 40px;
+  padding: 10px 16px 10px 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255,107,53,.2), 0 0 0 1px rgba(255,107,53,.06);
+  transition: all .2s;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.float-pill-btn:hover { box-shadow: 0 8px 28px rgba(255,107,53,.32); transform: scale(1.03); }
+.float-pill-fire { font-size: .9rem; }
+.float-pill-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .44rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #ff8c42;
+  line-height: 1.3;
+}
+.float-pill-price {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .56rem;
+  font-weight: 900;
+  color: #ffd700;
+}
+
+/* ════ 12. TRUST BAR UNDER PAY BUTTONS ════ */
+.pm-guarantee-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 8px 0 4px;
+  font-size: .65rem;
+  color: #35476a;
+}
+.pm-guarantee-icon { font-size: .75rem; }
+
+/* ════ 13. MOBILE-FIRST RESPONSIVE ════ */
+@media (max-width: 600px) {
+  #liveNotifContainer { bottom: 80px; left: 8px; right: 8px; }
+  .live-notif { max-width: 100%; }
+  .exit-modal { padding: 32px 20px 24px; }
+  .pguc-items { grid-template-columns: 1fr; }
+  #floatUpgradePill { display: none; }
+}
+
+/* ════ 14. ANIMATE ANNOUNCE BAR UPGRADE ════ */
+.announce-bar-upgrade {
+  background: linear-gradient(90deg, rgba(255,107,53,.12), rgba(255,77,109,.08), rgba(255,107,53,.12));
+  background-size: 200% 100%;
+  animation: announceSweep 4s linear infinite;
+}
+@keyframes announceSweep {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
