@@ -19,6 +19,7 @@
 
   <link rel="stylesheet" href="src/css/main.css"/>
   <link rel="stylesheet" href="src/css/conversion.css"/>
+  <link rel="stylesheet" href="src/css/premium-upgrade.css"/>
   <script src="https://sdk.cashfree.com/js/v3/cashfree.js" defer></script>
 </head>
 <body>
@@ -1225,6 +1226,9 @@ document.getElementById('modeToggle')?.addEventListener('change', function() {
 
 <!-- CONVERSION ENGINE -->
 <script type="module" src="src/js/conversion.js"></script>
+
+<!-- PREMIUM TILT EFFECT (desktop only, no deps) -->
+<script src="src/js/ui/tilt.js" defer></script>
 
 <!-- LIVE PURCHASE NOTIFICATIONS -->
 <div id="liveNotifContainer" aria-live="polite" aria-label="Recent purchases"></div>
