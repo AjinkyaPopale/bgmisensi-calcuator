@@ -30,14 +30,14 @@ export const GOLDEN_BASE = Object.freeze({
 // Separate base — passes through same scaling pipeline (device, FPS, playstyle).
 // Values purposefully distinct from GOLDEN_BASE; optimised for competitive lobbies.
 export const PMGC_ELITE_BASE = Object.freeze({
-  tpp: { cam: 60,  ads: 50, gyro: 290, ga: 295 },  // Elevated cam for tracking
-  fpp: { cam: 60,  ads: 50, gyro: 290, ga: 295 },  // Smoother FPP movement
-  red: { cam: 32,  ads: 1,  gyro: 320, ga: 310 },  // HS-optimised Red Dot
+  tpp: { cam: 87,  ads: 48, gyro: 272, ga: 258 },  // Elevated cam for tracking
+  fpp: { cam: 87,  ads: 48, gyro: 272, ga: 258 },  // Smoother FPP movement
+  red: { cam: 32,  ads: 1,  gyro: 332, ga: 332 },  // HS-optimised Red Dot
   x2:  { cam: 24,  ads: 1,  gyro: 285, ga: 275 },  // Tracking gyro boost
-  x3:  { cam: 18,  ads: 7,  gyro: 190, ga: 185 },  // Stable mid-range
-  x4:  { cam: 12,  ads: 10, gyro: 210, ga: 205 },  // Tight 4x recoil
+  x3:  { cam: 12,  ads: 1,  gyro: 129, ga: 135 },  // Stable mid-range
+  x4:  { cam: 8,   ads: 1,  gyro: 113, ga: 121 },  // Tight 4x recoil
   x6:  { cam: 1,   ads: 1,  gyro: 74,  ga: 88 },  // Low-jitter 6x
-  x8:  { cam: 10,  ads: 10, gyro: 115, ga: 110  },  // Precision 8x
+  x8:  { cam: 12,  ads: 8,  gyro: 88,  ga: 96  },  // Precision 8x
 });
 
 export const SCOPE_KEYS = Object.freeze(['tpp','fpp','red','x2','x3','x4','x6','x8']);
