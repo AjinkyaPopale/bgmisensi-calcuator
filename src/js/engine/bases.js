@@ -30,7 +30,7 @@ export const GOLDEN_BASE = Object.freeze({
 // Separate base — passes through same scaling pipeline (device, FPS, playstyle).
 // Values purposefully distinct from GOLDEN_BASE; optimised for competitive lobbies.
 export const PMGC_ELITE_BASE = Object.freeze({
-  tpp: { cam: 87,  ads: 48, gyro: 272, ga: 258 },  // Elevated cam for tracking
+  tpp: { cam: 93,  ads: 89, gyro: 380, ga: 395 },  // Elevated cam for tracking
   fpp: { cam: 87,  ads: 48, gyro: 272, ga: 258 },  // Smoother FPP movement
   red: { cam: 32,  ads: 1,  gyro: 332, ga: 332 },  // HS-optimised Red Dot
   x2:  { cam: 24,  ads: 1,  gyro: 285, ga: 275 },  // Tracking gyro boost
