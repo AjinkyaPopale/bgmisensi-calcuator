@@ -16,13 +16,13 @@
 
 // ── Standard Engine ───────────────────────────────────────
 export const GOLDEN_BASE = Object.freeze({
-  tpp: { cam: 60,  ads: 46, gyro: 330, ga: 345 },
-  fpp: { cam: 56,  ads: 42, gyro: 315, ga: 330 },
-  red: { cam: 18,  ads: 1,  gyro: 330, ga: 315 },
-  x2:  { cam: 24,  ads: 26, gyro: 320, ga: 310 },
-  x3:  { cam: 9,   ads: 11, gyro: 190, ga: 205 },
-  x4:  { cam: 3,   ads: 6,  gyro: 135, ga: 165 },
-  x6:  { cam: 1,   ads: 1,  gyro: 74,  ga: 88  },  // ✅ Training Ground Verified
+  tpp: { cam: 102, ads: 94, gyro: 320, ga: 320 },
+  fpp: { cam: 90,  ads: 82, gyro: 310, ga: 310 },
+  red: { cam: 39,  ads: 1,  gyro: 315, ga: 315 },
+  x2:  { cam: 24,  ads: 17, gyro: 295, ga: 295 },
+  x3:  { cam: 17,  ads: 13, gyro: 245, ga: 245 },
+  x4:  { cam: 13,  ads: 9,  gyro: 205, ga: 205 },
+  x6:  { cam: 9,   ads: 7,  gyro: 118, ga: 118 },  // ✅ Training Ground Verified
   x8:  { cam: 8,   ads: 8,  gyro: 80,  ga: 84  },  // ✅ Training Ground Verified
 });
 
